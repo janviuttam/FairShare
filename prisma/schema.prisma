@@ -13,8 +13,9 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
 
-  groups   GroupMember[]
-  expenses Expense[]
+  groups        GroupMember[]
+  expenses      Expense[]
+  expenseShares ExpenseParticipant[]
 }
 
 model Group {
@@ -43,12 +44,40 @@ model Expense {
 
   amount      Float
   description String
+  category    String @default("Other")
 
   paidById String
   groupId  String
 
   paidBy User  @relation(fields: [paidById], references: [id], onDelete: Cascade)
   group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  participants ExpenseParticipant[]
+
+  createdAt DateTime @default(now())
+}
+
+model ExpenseParticipant {
+  id String @id @default(cuid())
+
+  expenseId String
+  userId    String
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, userId])
+}
+
+model Settlement {
+  id String @id @default(cuid())
+
+  fromUserId String
+  toUserId String
+
+  amount Float
+
+  isPaid Boolean @default(false)
 
   createdAt DateTime @default(now())
 }

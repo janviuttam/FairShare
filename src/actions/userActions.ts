@@ -24,6 +24,28 @@ export async function createUser(formData: FormData) {
   revalidatePath("/users");
 }
 
+export async function updateUser(formData: FormData) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+
+  await prisma.user.update({
+    where: { id },
+    data: {
+      name,
+      email,
+    },
+  });
+
+  revalidatePath("/users");
+}
+
 export async function deleteUser(id: string) {
   const { userId } = await auth();
 

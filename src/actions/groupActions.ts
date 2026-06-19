@@ -22,16 +22,24 @@ export async function createGroup(formData: FormData) {
   revalidatePath("/groups");
 }
 
-export async function deleteGroup(id: string) {
+export async function deleteGroup(
+  formData: FormData
+) {
   const { userId } = await auth();
 
   if (!userId) {
     throw new Error("Unauthorized");
   }
 
+  const id =
+    formData.get("id") as string;
+
   await prisma.group.delete({
-    where: { id },
+    where: {
+      id,
+    },
   });
 
   revalidatePath("/groups");
+  revalidatePath("/dashboard");
 }
