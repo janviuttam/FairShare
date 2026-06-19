@@ -17,7 +17,10 @@ export default async function MembersPage() {
       group: true,
     },
   });
-
+  console.log("USERS", users);
+  console.log("GROUPS", groups);
+  console.log("MEMBERS", members);
+  
   return (
     <div className="min-h-screen p-10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white">
       <h1 className="text-5xl font-bold mb-8">
